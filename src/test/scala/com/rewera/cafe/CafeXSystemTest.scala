@@ -39,7 +39,7 @@ class CafeXSystemTest extends FlatSpec with Matchers {
   it should "charge 10% for service when cold food was ordered" in {
     val itemsPurchased = List(Cola, CheeseSandwich)
 
-    CafeXSystem.calcServiceCharge(itemsPurchased) shouldEqual
+    CafeXSystem.calcServiceCharge(itemsPurchased, 2.5) shouldEqual
       BigDecimal(0.25).setScale(2, BigDecimal.RoundingMode.HALF_UP)
 
     CafeXSystem.calcTotalBill(itemsPurchased) shouldEqual
@@ -49,7 +49,7 @@ class CafeXSystemTest extends FlatSpec with Matchers {
   it should "charge 20% for service when hot food was ordered" in {
     val itemsPurchased = List(Cola, SteakSandwich)
 
-    CafeXSystem.calcServiceCharge(itemsPurchased) shouldEqual
+    CafeXSystem.calcServiceCharge(itemsPurchased, 5.0) shouldEqual
       BigDecimal(1.0).setScale(2, BigDecimal.RoundingMode.HALF_UP)
 
     CafeXSystem.calcTotalBill(itemsPurchased) shouldEqual
@@ -59,7 +59,7 @@ class CafeXSystemTest extends FlatSpec with Matchers {
   it should "charge 20% for service when both cold and hot food was ordered" in {
     val itemsPurchased = List(Cola, SteakSandwich, CheeseSandwich)
 
-    CafeXSystem.calcServiceCharge(itemsPurchased) shouldEqual
+    CafeXSystem.calcServiceCharge(itemsPurchased, 7.0) shouldEqual
       BigDecimal(1.4).setScale(2, BigDecimal.RoundingMode.HALF_UP)
 
     CafeXSystem.calcTotalBill(itemsPurchased) shouldEqual
@@ -70,7 +70,7 @@ class CafeXSystemTest extends FlatSpec with Matchers {
     val coffees = List.fill(200)(Coffee)
     val itemsPurchased = SteakSandwich :: coffees
 
-    CafeXSystem.calcServiceCharge(itemsPurchased) shouldEqual
+    CafeXSystem.calcServiceCharge(itemsPurchased, 204.5) shouldEqual
       BigDecimal(20.0).setScale(2, BigDecimal.RoundingMode.HALF_UP)
 
     CafeXSystem.calcTotalBill(itemsPurchased) shouldEqual

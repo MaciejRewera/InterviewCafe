@@ -30,11 +30,30 @@ object CafeXSystem {
     val noChargeCost =
       purchasedItems.map(itemsProperties(_).cost).sum.setScale(2, BigDecimal.RoundingMode.HALF_UP)
 
-    noChargeCost + calcServiceCharge(purchasedItems)
+    noChargeCost + calcServiceCharge(purchasedItems, noChargeCost)
   }
 
-  def calcServiceCharge(purchasedItems: Seq[Item]): BigDecimal = {
-    0
+  def calcServiceCharge(purchasedItems: Seq[Item], noChargeCost: BigDecimal): BigDecimal = {
+    if ( purchasedItems.map(itemsProperties(_).itemType).contains(Food) )
+     calcFoodServiceCharge(purchasedItems, noChargeCost).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+    else
+      BigDecimal(0.0).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+  }
+
+  private def calcFoodServiceCharge(purchasedItems: Seq[Item], noChargeCost: BigDecimal): BigDecimal = {
+    val coldFoodServiceChargeFactor = 0.1
+    val hotFoodServiceChargeFactor = 0.2
+
+    val purchasedFood = purchasedItems.filter(itemsProperties(_).itemType == Food)
+
+    if ( purchasedFood.map(itemsProperties(_).servingTemperature).contains(Hot) ) {
+      val hotFoodServiceCharge = noChargeCost * hotFoodServiceChargeFactor
+
+      if (hotFoodServiceCharge > 20) 20
+      else hotFoodServiceCharge
+    }
+    else
+      noChargeCost * coldFoodServiceChargeFactor
   }
 
 }
