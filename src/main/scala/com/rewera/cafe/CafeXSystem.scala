@@ -13,4 +13,8 @@ object CafeXSystem {
   def calcTotalBill(purchasedItems: Seq[String]): BigDecimal =
     purchasedItems.map(itemsPrices(_)).sum.setScale(2, BigDecimal.RoundingMode.HALF_UP)
 
+  def calcServiceCharge(purchasedItems: Seq[String]): BigDecimal = {
+    0
+  }
+
 }

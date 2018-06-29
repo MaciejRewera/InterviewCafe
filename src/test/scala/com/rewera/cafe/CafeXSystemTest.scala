@@ -25,11 +25,52 @@ class CafeXSystemTest extends FlatSpec with Matchers {
       BigDecimal(0).setScale(2, BigDecimal.RoundingMode.HALF_UP)
   }
 
-  it should "return 3.5 for items [\"Cola\", \"Coffee\", \"Cheese Sandwich\"]" in {
-    val itemsPurchased = List("Cola", "Coffee", "Cheese Sandwich")
+  it should "return 1.5 for items [Cola, Coffee,]" in {
+    val itemsPurchased = List("Cola", "Coffee")
 
     CafeXSystem.calcTotalBill(itemsPurchased) shouldEqual
-      BigDecimal(3.5).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+      BigDecimal(1.5).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+  }
+
+  it should "charge 10% for service when cold food was ordered" in {
+    val itemsPurchased = List("Cola", "Cheese Sandwich")
+
+    CafeXSystem.calcServiceCharge(itemsPurchased) shouldEqual
+      BigDecimal(0.25).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+
+    CafeXSystem.calcTotalBill(itemsPurchased) shouldEqual
+      BigDecimal(2.75).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+  }
+
+  it should "charge 20% for service when hot food was ordered" in {
+    val itemsPurchased = List("Cola", "Steak Sandwich")
+
+    CafeXSystem.calcServiceCharge(itemsPurchased) shouldEqual
+      BigDecimal(1.0).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+
+    CafeXSystem.calcTotalBill(itemsPurchased) shouldEqual
+      BigDecimal(6.0).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+  }
+
+  it should "charge 20% for service when both cold and hot food was ordered" in {
+    val itemsPurchased = List("Cola", "Steak Sandwich", "Cheese Sandwich")
+
+    CafeXSystem.calcServiceCharge(itemsPurchased) shouldEqual
+      BigDecimal(1.4).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+
+    CafeXSystem.calcTotalBill(itemsPurchased) shouldEqual
+      BigDecimal(8.4).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+  }
+
+  it should "not exceed 20.0 for service when hot food was ordered" in {
+    val coffees = List.fill(200)("Coffee")
+    val itemsPurchased = "Steak Sandwich" :: coffees
+
+    CafeXSystem.calcServiceCharge(itemsPurchased) shouldEqual
+      BigDecimal(20.0).setScale(2, BigDecimal.RoundingMode.HALF_UP)
+
+    CafeXSystem.calcTotalBill(itemsPurchased) shouldEqual
+      BigDecimal(224.5).setScale(2, BigDecimal.RoundingMode.HALF_UP)
   }
 
 
